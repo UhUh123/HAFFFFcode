@@ -70,3 +70,49 @@ Node* SortChastot(const vector<unsigned long>& freq) {
     return head;
 }
 
+/*
+    ШАГ 4:
+*/
+
+Node* NewUzliForTree(Node* left, Node* right) {
+    Node* res = new Node(0, left->freq + right->freq, false);
+    res->left = left;
+    res->right = right;
+    res->next = nullptr;
+    return res;
+}
+
+Node* MakeHaffTree(Node*& head) {
+    while (head && head->next) {
+        Node* left = head;
+        Node* right = head->next;
+
+        head = head->next->next;
+        Add2List(head, NewUzliForTree(left, right));
+    }
+    return head;
+}
+
+/*
+    ШАГ 5:
+*/
+
+void GetCodeForSymbFromTreee(Node* root, vector<bool>& code, map<unsigned char, vector<bool>>& codesTable) {
+    if (!root) return;
+
+    if (root->isSymb) {
+        codesTable[root->symb] = code;
+    }
+
+    if (root->left) {
+        code.push_back(0);
+        GetCodeForSymbFromTreee(root->left, code, codesTable);
+        code.pop_back();
+    }
+
+    if (root->right) {
+        code.push_back(1);
+        GetCodeForSymbFromTreee(root->right, code, codesTable);
+        code.pop_back();
+    }
+}
