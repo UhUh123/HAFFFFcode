@@ -51,3 +51,7 @@ string SringWithNewCode(const string& filename, const map<unsigned char, vector<
 vector<char> GenerateTextFromNewCode(const string& bitString, int& tail);
 
 void WriteNewTextInOutFile(const string& outputFilename, int tail, const vector<char>& encodedBytes);
+
+void Decoding(const string& encodedFilename, const string& decodedFilename, Node* root);
+
+#endif

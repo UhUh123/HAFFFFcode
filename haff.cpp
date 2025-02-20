@@ -192,3 +192,60 @@ void WriteNewTextInOutFile(const string& outputFilename, int tail, const vector<
     cout << "Запись файла успешна: " << outputFilename << endl;
 }
 
+/*
+    ШАГ ДЕКОДИРОВАНИЕ
+*/
+
+
+void Decoding(const string &filename, const string &defilename, Node* root) {
+    ifstream inFile(filename, ios::binary);
+    if (!inFile.is_open()) {
+        cout << "Не удалось открыть файл для декодирования: " << filename << endl;
+        return;
+    }
+
+    char tailChar;
+    inFile.read(&tailChar, sizeof(tailChar));
+    int tail = static_cast<unsigned char>(tailChar);
+
+    inFile.seekg(1, ios::beg);
+
+    vector<char> encodedBytes;
+    char byte;
+    while (inFile.read(&byte, sizeof(byte))) {
+        encodedBytes.push_back(byte);
+    }
+    inFile.close();
+
+    string bitString;
+    for (size_t i = 0; i < encodedBytes.size(); i++) {
+        unsigned char byte = encodedBytes[i];
+        int bitsToProcess = (i == encodedBytes.size() - 1 && tail > 0) ? tail : 8;
+
+        for (int b = 0; b < bitsToProcess; b++) {
+            bitString.push_back(((byte >> b) & 1));
+        }
+    }
+    
+    ofstream outFile(defilename, ios::binary);
+    if (!outFile.is_open()) {
+        cout << "Не удалось открыть файл для записи распакованных данных: " << defilename << endl;
+        return;
+    }
+    
+    Node* current = root;
+    for (char bit : bitString) {
+        if (bit == '0') {
+            current = current->left;
+        } else {
+            current = current->right;
+        }
+        if (current->isSymb) {
+            outFile.put(current->symb);
+            current = root;
+        }
+    }
+    
+    outFile.close();
+    cout << "Декодирование завершено. Распакованный файл: " << defilename << endl;
+}

@@ -39,3 +39,9 @@ int main() {
 
     // 8. 
     WriteNewTextInOutFile(filename, tail, encodedBytes);
+
+    // Декодирование
+    Decoding(outputFilename, decodedFilename, root);
+
+    return 0;
+}
