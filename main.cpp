@@ -19,3 +19,6 @@ int main() {
 
     // 1.
     PodschetChastot(filename, freq);
+
+    / 3.
+    Node* head = SortChastot(freq);

@@ -36,3 +36,37 @@ void PodschetChastot(const string& filename, vector<unsigned long>& freq) {
 
     fr.close();
 }
+/*
+    ШАГ 2:
+*/
+
+void Add2List(Node*& head, Node* newNode) {
+    if (!head || newNode->freq < head->freq) {
+        newNode->next = head;
+        head = newNode;
+    }
+    else {
+        Node* current = head;
+        while (current->next && current->next->freq <= newNode->freq) {
+            current = current->next;
+        }
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+}
+
+/*
+    ШАГ 3:
+*/
+
+Node* SortChastot(const vector<unsigned long>& freq) {
+    Node* head = nullptr;
+
+    for (int i = 0; i < 256; ++i) {
+        if (freq[i] > 0) {
+            Add2List(head, new Node(static_cast<unsigned char>(i), freq[i]));
+        }
+    }
+    return head;
+}
+
