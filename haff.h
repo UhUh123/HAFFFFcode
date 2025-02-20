@@ -45,3 +45,9 @@ Node* NewUzliForTree(Node* left, Node* right);
 Node* MakeHaffTree(Node*& head);
 
 void GetCodeForSymbFromTreee(Node* root, vector<bool>& code, map<unsigned char, vector<bool>>& codesTable);
+
+string SringWithNewCode(const string& filename, const map<unsigned char, vector<bool>>& codesTable);
+
+vector<char> GenerateTextFromNewCode(const string& bitString, int& tail);
+
+void WriteNewTextInOutFile(const string& outputFilename, int tail, const vector<char>& encodedBytes);

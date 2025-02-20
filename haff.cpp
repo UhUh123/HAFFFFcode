@@ -116,3 +116,79 @@ void GetCodeForSymbFromTreee(Node* root, vector<bool>& code, map<unsigned char, 
         code.pop_back();
     }
 }
+/*
+    ШАГ 6:
+*/
+
+string SringWithNewCode(const string& filename, const map<unsigned char, vector<bool>>& codesTable) {
+    ifstream fr(filename, ios::binary);
+    string encodedString;
+    unsigned char c;
+
+    while (fr.read(reinterpret_cast<char*>(&c), sizeof(c))) {
+        if (codesTable.find(c) != codesTable.end()) {
+            const vector<bool>& code = codesTable.find(c)->second;
+            for (unsigned long i = 0; i < code.size(); ++i) {
+                encodedString.push_back('0' + code[i]);
+            }
+        }
+    }
+    fr.close();
+    return encodedString;
+}
+
+/*
+    ШАГ 7:
+*/
+
+vector<char> GenerateTextFromNewCode(const string& bitString, int& tail) {
+    int count = bitString.length() / BIT8;
+    tail = bitString.length() % BIT8;
+    int len = count + (tail > 0);
+
+    vector<char> res(len);
+    BIT2CHAR symb;
+
+    for (int i = 0; i < count; ++i) {
+        symb.mbit.b1 = bitString[i * BIT8 + 0] - '0';
+        symb.mbit.b2 = bitString[i * BIT8 + 1] - '0';
+        symb.mbit.b3 = bitString[i * BIT8 + 2] - '0';
+        symb.mbit.b4 = bitString[i * BIT8 + 3] - '0';
+        symb.mbit.b5 = bitString[i * BIT8 + 4] - '0';
+        symb.mbit.b6 = bitString[i * BIT8 + 5] - '0';
+        symb.mbit.b7 = bitString[i * BIT8 + 6] - '0';
+        symb.mbit.b8 = bitString[i * BIT8 + 7] - '0';
+        res[i] = symb.symb;
+    }
+
+    if (tail > 0) {
+        symb.symb = 0;
+        for (int i = 0; i < tail; ++i) {
+            symb.symb = symb.symb || (bitString[count * BIT8 + i] - '0') << i;
+        }
+        res[count] = symb.symb;
+    }
+
+    return res;
+}
+
+/*
+    ШАГ 8:
+*/
+
+void WriteNewTextInOutFile(const string& outputFilename, int tail, const vector<char>& encodedBytes) {
+    ofstream outFile(outputFilename, ios::binary);
+    if (!outFile.is_open()) {
+        cout << "Не удалось открыть файл для записи:" << outputFilename << endl;
+        return;
+    }
+
+    char tailChar = static_cast<char>(tail);
+    outFile.write(&tailChar, sizeof(tailChar));
+
+    outFile.write(encodedBytes.data(), encodedBytes.size());
+    outFile.close();
+
+    cout << "Запись файла успешна: " << outputFilename << endl;
+}
+
