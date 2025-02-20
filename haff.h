@@ -39,3 +39,9 @@ void PodschetChastot(const string& filename, vector<unsigned long>& freq);
 void Add2List(Node*& head, Node* newNode);
 
 Node* SortChastot(const vector<unsigned long>& freq);
+
+Node* NewUzliForTree(Node* left, Node* right);
+
+Node* MakeHaffTree(Node*& head);
+
+void GetCodeForSymbFromTreee(Node* root, vector<bool>& code, map<unsigned char, vector<bool>>& codesTable);

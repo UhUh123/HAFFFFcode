@@ -20,5 +20,13 @@ int main() {
     // 1.
     PodschetChastot(filename, freq);
 
-    / 3.
+    // 3.
     Node* head = SortChastot(freq);
+
+    // 4. 
+    Node* root = MakeHaffTree(head);
+
+    // 5. 
+    map<unsigned char, vector<bool>> codesTable;
+    vector<bool> code;
+    GetCodeForSymbFromTreee(root, code, codesTable);
